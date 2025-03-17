@@ -1,0 +1,14 @@
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/bin/Debug/net9.0/Exercicies
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/bin/Debug/net9.0/Exercicies.deps.json
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/bin/Debug/net9.0/Exercicies.runtimeconfig.json
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/bin/Debug/net9.0/Exercicies.dll
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/bin/Debug/net9.0/Exercicies.pdb
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/obj/Debug/net9.0/Exercicies.GeneratedMSBuildEditorConfig.editorconfig
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/obj/Debug/net9.0/Exercicies.AssemblyInfoInputs.cache
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/obj/Debug/net9.0/Exercicies.AssemblyInfo.cs
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/obj/Debug/net9.0/Exercicies.csproj.CoreCompileInputs.cache
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/obj/Debug/net9.0/Exercicies.dll
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/obj/Debug/net9.0/refint/Exercicies.dll
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/obj/Debug/net9.0/Exercicies.pdb
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/obj/Debug/net9.0/Exercicies.genruntimeconfig.cache
+/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/obj/Debug/net9.0/ref/Exercicies.dll
