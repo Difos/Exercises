@@ -8,25 +8,31 @@
     "net9.0": []
   },
   "packageFolders": {
-    "/Users/wesleyepeneto/.nuget/packages/": {}
+    "C:\\Users\\Wesley\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/Exercicies.csproj",
+      "projectUniqueName": "C:\\Users\\Wesley\\source\\repos\\Exercises\\Exercicies\\Exercicies.csproj",
       "projectName": "Exercicies",
-      "projectPath": "/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/Exercicies.csproj",
-      "packagesPath": "/Users/wesleyepeneto/.nuget/packages/",
-      "outputPath": "/Users/wesleyepeneto/Documents/source/repos/exercicies/Exercicies/obj/",
+      "projectPath": "C:\\Users\\Wesley\\source\\repos\\Exercises\\Exercicies\\Exercicies.csproj",
+      "packagesPath": "C:\\Users\\Wesley\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Wesley\\source\\repos\\Exercises\\Exercicies\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/wesleyepeneto/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Wesley\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -66,7 +72,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.102/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

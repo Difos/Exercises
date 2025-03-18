@@ -70,7 +70,7 @@ namespace Exercicies
 
         // ProblemsBinaryTree.MaxPathSum(root);
 
-        Console.WriteLine(ProblemsArray.MinTransfers(new int[][] {[0,1,10],[2,0,5]}));
+        Console.WriteLine(ProblemsArray.Rob(new int[] {2,7,9,3,1}));
        
         }
     }

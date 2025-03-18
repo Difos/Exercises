@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.VisualBasic;
 using Utils;
 
@@ -33,37 +34,38 @@ namespace ArraysStrings
             throw new ArgumentException("No two sum solution");
         }
 
-        public static int[][] Merge(int[][] intervals) {
-        if (intervals.Length == 0) return new int[0][];
-
-        // Ordenar diretamente o array (mais eficiente que OrderBy)
-        Array.Sort(intervals, (a, b) => a[0].CompareTo(b[0]));
-
-        List<int[]> merged = new List<int[]>();
-        int[] currentInterval = intervals[0];
-        merged.Add(currentInterval);
-
-        foreach (var interval in intervals)
+        public static int[][] Merge(int[][] intervals)
         {
-            int currentEnd = currentInterval[1];
-            int nextStart = interval[0];
-            int nextEnd = interval[1];
+            if (intervals.Length == 0) return new int[0][];
 
-            if (nextStart <= currentEnd)
+            // Ordenar diretamente o array (mais eficiente que OrderBy)
+            Array.Sort(intervals, (a, b) => a[0].CompareTo(b[0]));
+
+            List<int[]> merged = new List<int[]>();
+            int[] currentInterval = intervals[0];
+            merged.Add(currentInterval);
+
+            foreach (var interval in intervals)
             {
-                // Mescla os intervalos sobrepostos ajustando o final
-                currentInterval[1] = Math.Max(currentEnd, nextEnd);
+                int currentEnd = currentInterval[1];
+                int nextStart = interval[0];
+                int nextEnd = interval[1];
+
+                if (nextStart <= currentEnd)
+                {
+                    // Mescla os intervalos sobrepostos ajustando o final
+                    currentInterval[1] = Math.Max(currentEnd, nextEnd);
+                }
+                else
+                {
+                    // Adiciona um novo intervalo e atualiza o intervalo atual
+                    currentInterval = interval;
+                    merged.Add(currentInterval);
+                }
             }
-            else
-            {
-                // Adiciona um novo intervalo e atualiza o intervalo atual
-                currentInterval = interval;
-                merged.Add(currentInterval);
-            }
+
+            return merged.ToArray();
         }
-
-        return merged.ToArray();
-    }
         public static int LenghtOfLongestSubstring(string s)
         {
             int n = s.Length;
@@ -119,7 +121,39 @@ namespace ArraysStrings
             return _max;
 
         }
+        public static string MostCommonWord(string paragraph, string[] banned)
+        {
+            Dictionary<string, int> wordCounts = new Dictionary<string, int>();
 
+            // Normaliza e remove pontuação
+            paragraph = Regex.Replace(paragraph.ToLower(), "[^a-zA-Z\\s]", " ");
+            paragraph = Regex.Replace(paragraph, "\\s+", " ").Trim();
+
+            // Divide em palavras
+            string[] words = paragraph.Split(' ');
+
+            // Converte lista de banidos em HashSet para busca eficiente
+            HashSet<string> bannedWords = new HashSet<string>(banned);
+
+            // Contagem de palavras
+            foreach (string word in words)
+            {
+                if (!bannedWords.Contains(word)) // Se não está na lista de banidos
+                {
+                    if (wordCounts.ContainsKey(word))
+                    {
+                        wordCounts[word]++;
+                    }
+                    else
+                    {
+                        wordCounts[word] = 1;
+                    }
+                }
+            }
+
+            // Retorna a palavra mais comum (que não está banida)
+            return wordCounts.OrderByDescending(kvp => kvp.Value).FirstOrDefault().Key ?? "";
+        }
         public static int MyAtoi(string s)
         {
             s = s.TrimStart();
@@ -185,33 +219,6 @@ namespace ArraysStrings
 
             s = r;
             Console.WriteLine("[\"" + string.Join("\", \"", s) + "\"]");
-        }
-        public static int SearchBinaryTree(int[] nums, int target)
-        {
-            int lenArr = nums.Length;
-            int lowPos = 0;
-            int highPos = lenArr;
-
-            while (lowPos < highPos)
-            {
-                int middle = (int)((lowPos + highPos) / 2);
-
-                if (nums[middle] == target)
-                {
-                    return middle;
-                }
-
-                if (nums[middle] < target)
-                {
-                    lowPos = middle + 1;
-                }
-                else
-                {
-                    highPos = middle;
-                }
-            }
-
-            return -1;
         }
         public static int SearchBinaryTreeExp(int[] nums, int target, int low, int high)
         {
@@ -459,6 +466,40 @@ namespace ArraysStrings
             return result;
         }
 
+        public static int MinDifficulty(int[] jobDifficulty, int d)
+        {
+            int n = jobDifficulty.Length;
+            if (n < d) return -1; // If it's impossible to schedule
+
+            // dp[i,k] represents the minimum difficulty to schedule first i jobs in k days
+            int[,] dp = new int[n, d + 1];
+            int maxDifficulty;
+
+            // Initialize dp array
+            dp[0, 1] = jobDifficulty[0];
+            for (int i = 1; i < n; i++)
+            {
+                dp[i, 1] = Math.Max(dp[i - 1, 1], jobDifficulty[i]);
+            }
+
+            // Fill dp table
+            for (int k = 2; k <= d; k++)
+            { // number of days
+                for (int i = k - 1; i < n; i++)
+                { // number of jobs
+                    maxDifficulty = jobDifficulty[i];
+                    dp[i, k] = int.MaxValue;
+
+                    for (int j = i; j >= k - 1; j--)
+                    { // backward to find the best group
+                        maxDifficulty = Math.Max(maxDifficulty, jobDifficulty[j]);
+                        dp[i, k] = Math.Min(dp[i, k], dp[j - 1, k - 1] + maxDifficulty);
+                    }
+                }
+            }
+
+            return dp[n - 1, d];
+        }
         public static int StrStr(string haystack, string needle)
         {
             if (string.IsNullOrEmpty(needle)) return 0; // Se needle for vazia, retornamos 0
@@ -517,6 +558,31 @@ namespace ArraysStrings
                 }
             }
             return count;
+        }
+
+        public static int Rob(int[] nums)
+        {
+            //O(1) espacial
+            //O(n) temporal todos elementos vai ser percorrido 1 vez
+
+            // Iteração	n	temp (Max)	        two_before	 one_before
+            // Início	-	-	0	0
+            // 1 (n=2)	2	max(2+0, 0) = 2	    0 → 0	     0 → 2
+            // 2 (n=7)	7	max(7+0, 2) = 7	    2 → 2	     2 → 7
+            // 3 (n=9)	9	max(9+2, 7) = 11    7 → 7	     7 → 11
+            // 4 (n=3)	3	max(3+7, 11) = 11   11 → 11	     11 → 11
+            // 5 (n=1)	1	max(1+11, 11) = 12  11 → 11	     11 → 12
+
+            int one_before = 0, two_before = 0;
+
+            foreach (var n in nums)
+            {
+                var temp = Math.Max(n + two_before, one_before);
+                two_before = one_before;
+                one_before = temp;
+            }
+
+            return one_before;
         }
 
         public static IList<string> MostVisitedPattern(string[] username, int[] timestamp, string[] website)
@@ -622,76 +688,82 @@ namespace ArraysStrings
             return bestId;
 
         }
-        
+
         public static string[] ReorderLogFiles(string[] logs)
         {
-        //Criamos duas listas para armazenar os logs de letras e os logs numéricos
-        // O(n) - Espaço adicional necessário para armazenar os logs separados
-        List<string> letterLogs = new List<string>();
-        List<string> digitLogs = new List<string>();
+            //Criamos duas listas para armazenar os logs de letras e os logs numéricos
+            // O(n) - Espaço adicional necessário para armazenar os logs separados
+            List<string> letterLogs = new List<string>();
+            List<string> digitLogs = new List<string>();
 
-        // Percorremos todos os logs
-        // O(n) - pois percorremos cada log uma vez
-        foreach (string log in logs)
-        {
-            // Encontramos o primeiro espaço para separar o identificador do conteúdo
-            int firstSpaceIndex = log.IndexOf(' ');
-            string content = log.Substring(firstSpaceIndex + 1);
+            // Percorremos todos os logs
+            // O(n) - pois percorremos cada log uma vez
+            foreach (string log in logs)
+            {
+                // Encontramos o primeiro espaço para separar o identificador do conteúdo
+                int firstSpaceIndex = log.IndexOf(' ');
+                string content = log.Substring(firstSpaceIndex + 1);
 
-            // Verificamos se o primeiro caractere do conteúdo é uma letra
-            if (char.IsLetter(content[0]))
-            {
-                letterLogs.Add(log); // O(1) - Adicionamos o log à lista de letras
+                // Verificamos se o primeiro caractere do conteúdo é uma letra
+                if (char.IsLetter(content[0]))
+                {
+                    letterLogs.Add(log); // O(1) - Adicionamos o log à lista de letras
+                }
+                else
+                {
+                    digitLogs.Add(log); // O(1) - Adicionamos o log à lista de números
+                }
             }
-            else
-            {
-                digitLogs.Add(log); // O(1) - Adicionamos o log à lista de números
-            }
+
+            // Ordenamos os logs de letras
+            // O(m log m), onde m é o número de logs de letras
+            var sortedLetterLogs = letterLogs
+                .OrderBy(log =>
+                {
+                    int spaceIndex = log.IndexOf(' ');
+                    return log.Substring(spaceIndex + 1); // Ordenação principal: conteúdo do log
+                })
+                .ThenBy(log =>
+                {
+                    int spaceIndex = log.IndexOf(' ');
+                    return log.Substring(0, spaceIndex); // Ordenação secundária: identificador
+                })
+                .ToList();
+
+            // Concatenamos os logs ordenados de letras com os logs numéricos
+            // O(n) - pois estamos apenas unindo duas listas
+            return sortedLetterLogs.Concat(digitLogs).ToArray();
         }
 
-        // Ordenamos os logs de letras
-        // O(m log m), onde m é o número de logs de letras
-        var sortedLetterLogs = letterLogs
-            .OrderBy(log => {
-                int spaceIndex = log.IndexOf(' ');
-                return log.Substring(spaceIndex + 1); // Ordenação principal: conteúdo do log
-            })
-            .ThenBy(log => {
-                int spaceIndex = log.IndexOf(' ');
-                return log.Substring(0, spaceIndex); // Ordenação secundária: identificador
-            })
-            .ToList();
-
-        // Concatenamos os logs ordenados de letras com os logs numéricos
-        // O(n) - pois estamos apenas unindo duas listas
-        return sortedLetterLogs.Concat(digitLogs).ToArray();
-        }
-    
         public static int Trap(int[] height)
         {
-            
-            int totalWaterTraped=0, l=0, r = height.Length-1;
-            int lmax =0, rmax = r;
 
-            while(l < r)
+            int totalWaterTraped = 0, l = 0, r = height.Length - 1;
+            int lmax = 0, rmax = r;
+
+            while (l < r)
             {
-                if(height[l] <= height[r])
+                if (height[l] <= height[r])
                 {
-                    if(height[l] < lmax)
+                    if (height[l] < lmax)
                     {
-                        totalWaterTraped += lmax - height[l]; 
-                    }else{
+                        totalWaterTraped += lmax - height[l];
+                    }
+                    else
+                    {
                         lmax = height[l];
                     }
                     l++;
                 }
                 else
                 {
-                    if(height[r] < lmax)
+                    if (height[r] < rmax)
                     {
-                        totalWaterTraped += lmax - height[r]; 
-                    }else{
-                        lmax = height[r];
+                        totalWaterTraped += rmax - height[r];
+                    }
+                    else
+                    {
+                        rmax = height[r];
                     }
                     l--;
                 }
@@ -700,19 +772,20 @@ namespace ArraysStrings
             return totalWaterTraped;
 
         }
-    
+
         public static int NumIslands(char[][] grid)
         {
-            if(grid == null || grid.Length ==0 || grid[0].Length ==0) return 0;
+            if (grid == null || grid.Length == 0 || grid[0].Length == 0) return 0;
 
-            int count=0;
-            for(int i=0; i < grid.Length; i++)
+            int count = 0;
+            for (int i = 0; i < grid.Length; i++)
             {
-                for(int j=0; j < grid[0].Length; j++)
+                for (int j = 0; j < grid[0].Length; j++)
                 {
-                    if(grid[i][j] == '1')
+                    if (grid[i][j] == '1')
                     {
                         DFSIslands(grid, i, j);
+                        count++;
                     }
                 }
             }
@@ -722,22 +795,23 @@ namespace ArraysStrings
 
         public static void DFSIslands(char[][] grid, int i, int j)
         {
-            if(i < 0 || i >= grid.Length || j < 0 || j >= grid[0].Length || grid[i][j] != '1')
+            if (i < 0 || i >= grid.Length || j < 0 || j >= grid[0].Length || grid[i][j] != '1')
             {
                 return;
             }
+
             grid[i][j] = '0';
-            DFSIslands(grid, i+1, j);
-            DFSIslands(grid, i-1, j);
-            DFSIslands(grid, i, j+1);
-            DFSIslands(grid, i, j-1);
+            DFSIslands(grid, i + 1, j);
+            DFSIslands(grid, i - 1, j);
+            DFSIslands(grid, i, j + 1);
+            DFSIslands(grid, i, j - 1);
         }
 
         public static int MinTransfers(int[][] transactions)
         {
             //Passo 1: Calcular o saldo liquido de cada pessoa
             Dictionary<int, int> balances = new Dictionary<int, int>();
-            foreach(var t in transactions)
+            foreach (var t in transactions)
             {
                 int sender = t[0], receiver = t[1], amount = t[2];
 
@@ -749,30 +823,31 @@ namespace ArraysStrings
 
             }
 
-        //passo 2: Extrair saldos nao zero (dividas a serem resolvidas)
+            //passo 2: Extrair saldos nao zero (dividas a serem resolvidas)
             List<int> debts = balances.Values.Where(x => x != 0).ToList();
-            debts.Sort((a ,b) => Math.Abs(b).CompareTo(Math.Abs(a)));
-        //passo 3: Backtracking para encontrar o minimo de transacoes
+            debts.Sort((a, b) => Math.Abs(b).CompareTo(Math.Abs(a)));
+            //passo 3: Backtracking para encontrar o minimo de transacoes
             return Backtrack(debts, 0);
         }
 
         public static int Backtrack(List<int> debts, int start)
         {
             //ignora saldos ja zerados
-            while(start < debts.Count && debts[start] ==0){
+            while (start < debts.Count && debts[start] == 0)
+            {
                 start++;
             }
 
             //Caso base: todos os saldos foram resolvidos
-            if(start == debts.Count) return 0;
+            if (start == debts.Count) return 0;
 
             int minTransactions = int.MaxValue;
 
             //Tenta combinar a divida atual (start) com outras dividas
-            for(int i = start + 1; i < debts.Count; i++)
+            for (int i = start + 1; i < debts.Count; i++)
             {
                 //so combina dividas de sinais opostos
-                if(debts[i] * debts[start] < 0) 
+                if (debts[i] * debts[start] < 0)
                 {
                     //simula uma transacao entre start e i
                     debts[i] += debts[start]; //transfere a divida 
@@ -781,14 +856,14 @@ namespace ArraysStrings
                     //1 + é essencial para acumular o número de transações ao longo da recursão
                     /*1 +: Contabiliza a transação atual.
                     t + 1: Avança na lista de dívidas para evitar repetições.*/
-                    minTransactions = Math.Min(minTransactions, 1+ Backtrack(debts, start +1));
+                    minTransactions = Math.Min(minTransactions, 1 + Backtrack(debts, start + 1));
                     debts[i] -= debts[start]; //Backtrack(dezfaz a transcao)
                 }
             }
 
             return minTransactions == int.MaxValue ? 0 : minTransactions;
         }
-    
+
     }
 
     public class Logger

@@ -161,11 +161,29 @@ namespace BinaryTree
         {
             if (root == null) return 0;
 
-            Util.DFSb(root);
+            DFSb(root);
 
             return Util.maxSum;
         }
 
+        public static int maxSum = int.MinValue;
+
+        public static int DFSb(TreeNode<int> root)
+        {
+
+            if(root ==null) return 0;
+            //calcula o maximo caminho na esquerda e na direita, ignorando
+            //valores negativos
+            int leftSum = Math.Max(DFSb(root.left),0);
+            int rightSum = Math.Max(DFSb(root.right),0);
+
+            //Atualiza a soma maxima globasl considerando o no atual como ponto de juncao
+            maxSum = Math.Max(maxSum, leftSum + rightSum + root.val);
+            //return o maior caminho unico para a chamada anteriro(nao pode dividir em 2)
+            return root.val + Math.Max(leftSum, rightSum);
+
+            
+        }
         public static int MaxDepth(TreeNode<int> root)
         {
             if (root == null) return 0;
@@ -263,6 +281,34 @@ namespace BinaryTree
 
         }
 
+        public static int SearchBinaryTree(int[] nums, int target)
+        {
+            int lenArr = nums.Length;
+            int lowPos = 0;
+            int highPos = lenArr;
+
+            while (lowPos < highPos)
+            {
+                int middle = (int)((lowPos + highPos) / 2);
+
+                if (nums[middle] == target)
+                {
+                    return middle;
+                }
+
+                if (nums[middle] < target)
+                {
+                    lowPos = middle + 1;
+                }
+                else
+                {
+                    highPos = middle;
+                }
+            }
+
+            return -1;
+        }
+
         public static Node LowestCommonAncestor(Node p, Node q)
         {
             var pNodes = GetAncestors(p);
@@ -278,5 +324,19 @@ namespace BinaryTree
                 node = node.parent;
             }
         }
+
+        public static TreeNode<int> LowestCommonAncestor(TreeNode<int> root, TreeNode<int> p, TreeNode<int> q) {
+        if(root == null || root == p || root == q) return root;
+        
+        TreeNode<int> left = LowestCommonAncestor(root.left , p, q);
+        TreeNode<int> right = LowestCommonAncestor(root.right, p, q);
+        
+        if(left != null && right != null)
+        {
+            return root;
+        }
+        
+        return left ?? right;
+    }
     }
 }
